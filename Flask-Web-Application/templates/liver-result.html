@@ -5,70 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liver Disease Predictor</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='diabetes-favicon.ico') }}">
-    <script src="https://kit.fontawesome.com/5f3f547070.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
     <style>
-        html {
-            height: 100%;
-            margin: 0;
+        /* Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
         }
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: center;
+        html, body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9fdfd;
+            color: #2c3e50;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            font-size: 18px;
         }
 
-        /* Website Title */
-        .container {
-            padding: 30px;
-            position: relative;
-            background: linear-gradient(to bottom left, #00ccff 0%, #ff66ff 100%);
-            background-size: 500% 500%;
-            animation: change-gradient 10s ease-in-out infinite;
+        header {
+            background: rgb(170, 216, 214);
+            color: #004d40;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
-        @keyframes change-gradient {
-            0% {
-                background-position: 0 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0 50%;
-            }
-        }
-
-        .container-heading {
+        header h1 {
             margin: 0;
+            font-size: 40px;
+            text-transform: uppercase;
+            font-weight: 700;
         }
 
-        .heading_font {
-            color: hsl(0, 0%, 100%);
-            font-family: 'Pacifico', cursive;
-            font-size: 45px;
-            font-weight: normal;
+        main.content {
+            flex: 1;
+            max-width: 700px;
+            margin: 2rem auto 4rem;
+            background: #fff;
+            padding: 2rem 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .description p {
-            color: hsl(0, 0%, 100%);
-            font-style: italic;
-            font-size: 20px;
-            margin: -5px 0 0;
+        main.content h2 {
+            color: #00796b;
+            font-size: 36px;
+            margin-bottom: 0.5rem;
+            text-align: center;
         }
 
-        /* Result Section */
         .results {
             margin: 30px 0;
-            flex: 1 0 auto;
             font-size: 25px;
+            text-align: center;
         }
 
         .danger {
@@ -81,61 +73,85 @@
             font-weight: bold;
         }
 
-        /* Footer */
-        .footer {
-            flex-shrink: 0;
-            position: relative;
-            padding: 20px;
-            background: linear-gradient(to bottom left, #00ccff 0%, #ff66ff 100%);
-            background-size: 500% 500%;
-            animation: change-gradient 10s ease-in-out infinite;
+        .back-button {
+            text-align: center;
+            margin-top: 0px;
         }
 
-        .footer-description {
-            color: #ffffff;
-            margin: 0;
-            font-size: 20px;
+        .back-button a {
+            background-color: #00796b;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
         }
 
-        /* Contact */
-        .contact-icon {
-            color: #ffffff;
-            padding: 7px;
+        .back-button a:hover {
+            background-color: #005f56;
         }
 
-        .contact-icon:hover {
-            color: #8c8c8c;
+        footer.footer {
+            height: 120px;
+            background-color: rgb(170, 216, 214);
+            color: #004d40;
+            text-align: center;
+            padding: 1.5rem 0.5rem;
+            box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.08);
+            font-size: 1rem;
+            margin-top: auto;
+        }
+
+        footer .contact {
+            margin-bottom: 6px;
+        }
+
+        footer .contact a {
+            color: #004d40;
+            margin: 0 1rem;
+            font-size: 2rem;
+            transition: color 0.3s;
+        }
+
+        footer .contact a:hover {
+            color: #00796b;
+        }
+
+        footer p.footer-description {
+            margin-top: 0;
+            font-weight: 600;
         }
     </style>
 </head>
 
 <body>
+    <header>
+        <h1>Health Diagnostic Hub</h1>
+    </header>
 
-    <!-- Website Title -->
-    <div class="container">
-        <h2 class='container-heading'><span class="heading_font">Liver Disease Predictor</span></h2>
-        <div class='description'>
-            <p>A Machine Learning Web App, Built with Flask.</p>
+    <main class="content">
+        <h2>Liver Disease Predictor</h2>
+
+        <div class="results">
+            {% if prediction == 1 %}
+                <h1><span class='danger'>Oops! You have Chances of Liver Disease.</span></h1>
+            {% elif prediction == 0 %}
+                <h1><span class='safe'>Great! You DON'T have Chances of Liver Disease.</span></h1>
+            {% endif %}
         </div>
-    </div>
 
-    <!-- Result -->
-    <div class="results">
-        {% if prediction==1 %}
-            <h1>Prediction: <span class='danger'>Oops! You have Chances of Liver Disease.</span></h1>
-        {% elif prediction==0 %}
-            <h1>Prediction: <span class='safe'>Great! You DON'T have Chances of Liver Disease.</span></h1>
-        {% endif %}
-    </div>
+        <div class="back-button">
+            <a href="/liver-test">Take Another Test</a>
+        </div>
+    </main>
 
-    <!-- Footer -->
-    <div class='footer'>
+    <footer class="footer">
         <div class="contact">
-            <a target="_blank" href="https://github.com/JiteshShelke/Machine-Learning-Algorithms"><i class="fab fa-github fa-lg contact-icon"></i></a>
-            <a target="_blank" href="https://www.linkedin.com/in/jitesh-shelke-702745286//"><i class="fab fa-linkedin fa-lg contact-icon"></i></a>
+            <a target="_blank" href="https://github.com/JiteshShelke/"><i class="fab fa-github"></i></a>
+            <a target="_blank" href="https://www.linkedin.com/in/jitesh-shelke-702745286/"><i class="fab fa-linkedin"></i></a>
         </div>
-        <p class='footer-description'>Made by Jitesh Shelke.</p>
-    </div>
-
+        <p class="footer-description">Made by Jitesh Shelke.</p>
+    </footer>
 </body>
 </html>
